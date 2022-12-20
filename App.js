@@ -1,15 +1,5 @@
-let key = 'LKTNMJ5YjbvG9z2tKW1MMvLh4qX49LRg';
+let key = '2DgwGYphvXPFXEbLraQwgOtAqn7MTEea';
 
-// get weather information
-let getWeather = async (id) => {
-
-    let base = 'http://dataservice.accuweather.com/currentconditions/v1/{locationKey}'
-    let query = `${id}?apikey=${key}`
-
-    let response = await fetch(base + query)
-    let data = await response.json()
-    return data
-} 
 
 // Get city information
 let getcity = async (city) => {
@@ -24,12 +14,27 @@ let getcity = async (city) => {
 }
 
 
+// get weather information
+let getWeather = async (id) => {
+
+    let base = 'http://dataservice.accuweather.com/currentconditions/v1/{locationKey}'
+    let query = `${id}?apikey=${key}`
+
+    let response = await fetch(base + query)
+    let data = await response.json()
+    return data
+} 
 
 
+// Selecting elements...
 let cityform = document.querySelector('form')
 let card = document.querySelector('.card')
 let details = document.querySelector('.details')
-let time = document.querySelector('times')
+let time = document.querySelector('time')
+let icon = document.querySelector('.icon img')
+
+
+// Updating the UI
 let updateUI = async (data) => {
     let {citydets , weather} = data
 
@@ -43,12 +48,20 @@ let updateUI = async (data) => {
         </div>
     `
 
+    // update the night/day & icon images
+    let iconSrc = `img/icons/${weather.WeatherIcon}.svg`
+    icon.setAttribute('src', iconSrc)
+
+    let timeSrc =  weather.IsDayTime ?  'img/day.svg':  'img/night.svg'
+    time.setAttribute('src', timeSrc)
+
     // Remove the d-none class if present
     if (card.classList.contains('d-none')){
         card.classList.remove('d-none')
     }
 }
 
+// updating the city
 let updatecity = async (city) => {
 
     let citydets = await getcity(city)
@@ -61,6 +74,7 @@ let updatecity = async (city) => {
 }
 
 
+// Adding event listners.
 cityform.addEventListener('submit' , e => {
     // Prevent from default
     e.preventDefault()
